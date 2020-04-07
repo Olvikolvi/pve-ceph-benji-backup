@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /home/doop/ceph.sh
+. $(pwd)/ceph.sh
 
 get_disk () {
   # Limit to first 20 lines to hopefully avoid including snapshot images
@@ -17,12 +17,11 @@ network_ceph_backup () {
   for disk in `get_disk $1`; do
     #[ $disk == "rbd_ssd/vm-130-disk-2" ] && continue;  # vivotek-vast2 - video recordings (skip)
     IFS='/' read pool image <<< $disk;
-    if [ "$pooll" == "nuc-ceph" ]; then
-      export CONF="/etc/ceph/ceph_nuc.conf"
-      export IO="rbdnuc"
+    if [ "$pooll" == "ceph-odroid" ]; then
+      export CONF="/etc/ceph/ceph.odroid.conf"
+      export IO="rbdodroid"
     else
-      export CONF="/etc/ceph/ceph_proxmox.conf"
-      export IO="rbdpve"
+      continue
     fi
     benji::backup::ceph "$name""-disk$num" "$pool" "$image" "AutomatedBackup";
     let "num++";
