@@ -1,5 +1,8 @@
 #!/bin/bash
 
+LC_ALL="en_US.UTF-8"
+
+
 . $(pwd)/ceph.sh
 
 get_disk () {
@@ -17,9 +20,10 @@ network_ceph_backup () {
   for disk in `get_disk $1`; do
     #[ $disk == "rbd_ssd/vm-130-disk-2" ] && continue;  # vivotek-vast2 - video recordings (skip)
     IFS='/' read pool image <<< $disk;
-    if [ "$pooll" == "ceph-odroid" ]; then
+    if [ "$pool" == "ceph-odroid" ]; then
       export CONF="/etc/ceph/ceph.odroid.conf"
       export IO="rbdodroid"
+      export pool="rbd"
     else
       continue
     fi
